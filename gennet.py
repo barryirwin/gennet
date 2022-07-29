@@ -19,6 +19,7 @@ import random
 import socket
 import struct
 
+## -------------- some variables to handle data ---------------
 MAXIP=20
 # RFC 3330 special ise cases
 not_valid = [10,127,169,172,192]
@@ -27,29 +28,31 @@ not_valid = [10,127,169,172,192]
 # socket.inet_ntoa(struct.pack('>I', random.randint(1, 0xffffffff)))
 
 iplist=[]
-cidrlist=[]
-masklist=[]
+
+# This is used to hold a list of subnets which are used to henerate the following:
+#    [ip/netmask] - IP address/netmask in CIDR
+#    [broadcast] - Broadcast address for the subnet
+#    [cidr] - cidr notation
+#    [range] - first/last IP in net ( via cidr2block)
+#    [netmask] - in dotted quad
+#    [count] - number of IPs in subnet - not considering availability (2^n-2)
 
 # this is potentially ~2^32 combinations - and can be changed if needed
 seed=random.randrange(31337,65535)
 print(f"% {seed} {hex(seed)}")
 #set the seed explicitly for repeatability
 random.seed(seed)
-# strucuture
-#/*
-#demolist[]
-# [ip] - IP addresses
-#    [netmask] - netmask in CIDR
-#    [cidr] - cidr notation
-#    [range] - first/last IP in net ( via cidr2block)
-#    [nm2] - dotted quad  via
-#    [cnt] - number of IPs avalable
-#*/
+
 
 def dqnetmask(prefix):
     return socket.inet_ntoa(struct.pack(">I", (0xffffffff << (32 - prefix)) & 0xffffffff))
 
 def printlatex(mylist):
+
+
+
+
+def latexpreamble()    
     print ("% Do not edit unless you really know what you are doing")
     print ("\\documentclass[english]{article}")
 #    print ("\\usepackage[T1]{fontenc}")
@@ -68,8 +71,17 @@ def printlatex(mylist):
     print ("\\begin{document}")
     print ("\\title{IP Subnetting worksheet - \\rndseed}\n\\date{}\n\\maketitle")
     print ("\\pagenumbering{gobble}")  #remove page numbers for improved inclusion elsewhere
+
     print ("\\section*{PROBLEMS}")
-    print (f"% {hex(seed)}") 
+    latexproblem(mylist)
+    print ("\\pagebreak{}\n")
+    print ("section*{SOLUTIONS}")
+    latexsoln(mylist)
+
+    print ("\\end{document}")
+
+def latexproblem(mylist)    
+    print (f"% {hex(seed)} - to be used for later generation of solutions") 
 
     print ("\\begin{tabular}{|c|c|c|c|c|c|} \hline CIDR &")
     print ("Network & Bcast & IP Count & First IP & DQ Netmask \\tln")
@@ -82,8 +94,7 @@ def printlatex(mylist):
 
     print ("\\end{tabular}")
 
-    print ("\\pagebreak{}\n\\section*{SOLUTIONS}")
-
+def latexsoln(mylist)
     print ("\\begin{tabular}{|c|c|c|c|c|c|} \hline CIDR &")
     print ("Network & Bcast & IP Count & First IP & DQ Netmask \\tln")
     print ("\\hline\n\\hline")
@@ -98,7 +109,7 @@ def printlatex(mylist):
         print (f"{x} & {netname} & {bcast} & {ipcount} & {first} & {dqmask} \\tln") 
         print ("\\hline")
 
-    print ("\\end{tabular}\n\\end{document}")
+    print ("\\end{tabular}\n")
 
 def printcsv(mylist):
     print(mylist)
