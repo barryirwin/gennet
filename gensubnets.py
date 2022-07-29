@@ -10,6 +10,7 @@ import socket
 import struct
 
 MAXIP=20
+# RFC 3330 special ise cases
 not_valid = [10,127,169,172,192]
 
 #Generates A random IP
@@ -19,6 +20,11 @@ iplist=[]
 cidrlist=[]
 masklist=[]
 
+# this is potentially ~2^32 combinations - and can be changed if needed
+seed=random.randrange(31337,65535)
+print(f"% {seed} {hex(seed)}")
+#set the seed explicitly for repeatability
+random.seed(seed)
 # strucuture
 #/*
 #demolist[]
@@ -34,29 +40,34 @@ def dqnetmask(prefix):
     return socket.inet_ntoa(struct.pack(">I", (0xffffffff << (32 - prefix)) & 0xffffffff))
 
 def printlatex(mylist):
-    print ("\%\% Do not edit unless you really know what you are doing")
+    print ("% Do not edit unless you really know what you are doing")
     print ("\\documentclass[english]{article}")
-    print ("\\usepackage[T1]{fontenc}")
-    print ("\\usepackage[latin9]{inputenc}")
+#    print ("\\usepackage[T1]{fontenc}")
+#    print ("\\usepackage[latin9]{inputenc}")
     print ("\\usepackage[a4paper]{geometry}")
     print ("\\geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=2.0cm,rmargin=2.0cm,headheight=2.5cm,headsep=2.5cm,footskip=2.5cm}")
     print ("\\usepackage{setspace}")
     print ("\\doublespacing")
     print ("\\makeatletter")
-    print ("\\providecommand{\\tabularnewline}{\\\\}")
+    print ("\\providecommand{\\tln}{\\\\}")
     print ("\\makeatother")
+    print ("\\newcommand{\\rndseed}{",end='')
+    print (f"{hex(seed)}",end='')
+    print ("}",end='')
+    print (f" % {seed}")
     print ("\\begin{document}")
-    print ("\\title{IP Test Sheet}\n\\date{}\n\\author{Gennet Prac Sheet v 0.1}\n\\maketitle")
-
-    print ("\\section*{PROBLEMS}\n")
+    print ("\\title{IP Subnetting worksheet - \\rndseed}\n\\date{}\n\\maketitle")
+    print ("\\pagenumbering{gobble}")  #remove page numbers for improved inclusion elsewhere
+    print ("\\section*{PROBLEMS}")
+    print (f"% {hex(seed)}") 
 
     print ("\\begin{tabular}{|c|c|c|c|c|c|} \hline CIDR &")
-    print ("Network & Bcast & IP Count & First IP & DQ Netmask \\tabularnewline")
+    print ("Network & Bcast & IP Count & First IP & DQ Netmask \\tln")
     print ("\\hline\n\\hline")
-    print ("102.204.166.91/16 & 102.204.0.0 & 102.204.255.255 & 65536 & 102.204.0.1 & 255.255.0.0 \\tabularnewline")
+    print ("102.204.166.91/16 & 102.204.0.0 & 102.204.255.255 & 65536 & 102.204.0.1 & 255.255.0.0 \\tln")
     print ("\\hline")
     for x in  mylist:
-        print (f"{x} &            &            &            &            &            \\tabularnewline")
+        print (f"{x} &            &            &            &            &            \\tln")
         print ("\\hline")
 
     print ("\\end{tabular}")
@@ -64,7 +75,7 @@ def printlatex(mylist):
     print ("\\pagebreak{}\n\\section*{SOLUTIONS}")
 
     print ("\\begin{tabular}{|c|c|c|c|c|c|} \hline CIDR &")
-    print ("Network & Bcast & IP Count & First IP & DQ Netmask \\tabularnewline")
+    print ("Network & Bcast & IP Count & First IP & DQ Netmask \\tln")
     print ("\\hline\n\\hline")
 
 
@@ -74,7 +85,7 @@ def printlatex(mylist):
         first=iptools.ipv4.long2ip(iptools.ipv4.ip2long(netname)+1)
         ipcount=len(iptools.IpRangeList(x))
         dqmask=dqnetmask(int(x[-2:]))
-        print (f"{x}\n\n & {netname} & {bcast} & {ipcount} & {first} & {dqmask} \\tabularnewline") 
+        print (f"{x} & {netname} & {bcast} & {ipcount} & {first} & {dqmask} \\tln") 
         print ("\\hline")
 
     print ("\\end{tabular}\n\\end{document}")
@@ -94,7 +105,7 @@ def printcsv(mylist):
 # print out a a list limited by MAXIP
 for i in range(MAXIP):
     first = random.randrange(1,256)
-    while (first in not_valid) & (first < 224) :
+    while (first in not_valid) & (first < 224) :  # no multicast space and no special blocks
         first = random.randrange(1,256)
 
     ip = ".".join([str(first),str(random.randrange(1,256)),str(random.randrange(1,256)),str(random.randrange(1,256))])
@@ -107,5 +118,7 @@ for i in iplist:
     cidrlist.append("%s/%d" % (i,mask))
 
 #print(cidrlist)
-printcsv(cidrlist)
+#printcsv(cidrlist)
 printlatex(cidrlist)
+
+
