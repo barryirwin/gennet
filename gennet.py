@@ -73,7 +73,7 @@ def printlatex(mylist):
     print ("\\section*{PROBLEMS}")
     latexproblem(mylist)
     print ("\\pagebreak{}\n")
-    print ("section*{SOLUTIONS}")
+    print ("\\section*{SOLUTIONS}")
     latexsoln(mylist)
 
     print ("\\end{document}")
