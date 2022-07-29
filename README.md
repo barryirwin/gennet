@@ -1,10 +1,10 @@
-# gennet
+# gennet 
 
-Subnet worksheet generator
+_A IP Subnet worksheet generator, with LaTeX output_
 
 This script was developed to aid in the need for drill and practice exercises for teaching an introductory networks course. This has devleoped over the years to add additional functionality and use cases.
 
-The worksheets contents are randomly generated and outputted as (a minimal) LaTeX document. This document (or select parts of it) can then be converted to a PDF using pdflatex or similar. 
+The worksheets contents are randomly generated and outputted as (a minimal) LaTeX document. This document (or select parts of it) can then be converted to a PDF using `pdflatex` or similar. 
 
 Options allow for the generation of a two-sided worksheet containing solutions. Alternately this can be suppressed, for more summative type exercises.
 
@@ -12,7 +12,8 @@ The problems and solutions tables can each be generated separately for inclusion
 
 Seed values are stroed in the LaTeX versions of the output. These can be used to regenerate a particular set of output (for example a solution) at a later stage.
 
-##USAGE
+## USAGE
+```
 This produced a list of IPv4 subnets to stdout in a variety of formats
 
 
@@ -27,7 +28,7 @@ This produced a list of IPv4 subnets to stdout in a variety of formats
   -L     Latex Documnet output mode
   -C     CSV output mode
   -S <n> Seed (int or hex - [0x????] )
-  -V    Version and source information
+  -V     Version and source information
 
 Minimum examples:
 	./gennet.py -L # prints a ful LaTeX dump
@@ -35,6 +36,4 @@ Minimum examples:
 
 Conversion:
 	$ ./gennet.py -L > temp.tex; pdflatex temp.tex
-
-$Id$
-
+```
