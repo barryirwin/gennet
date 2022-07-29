@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 
+# gennet.py  v0.2 
+# Generates a series of IP supnets and outputs these as LaTeX or as a CSV
+# In the case of LaTeX - tables are produced both populated and unpopulated
+# Intention is fotr this to be used to generate worksheets for use in classroom
+# enviroments analongside accompanying solutions.
+#
+# USAGE
+#   $ gennet > worksheet.tex; pdflatex worksheet.tex
+#
+# This is intended to be a minimal function and LaTeX formatting can be adjusted in an edditor of choice
 
 # Use IPtools package
 import iptools
