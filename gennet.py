@@ -12,9 +12,10 @@
 # This is intended to be a minimal function and LaTeX formatting can be adjusted in an edditor of choice
 try:
     import iptools
-except:
+except ModuleNotFoundError:
     print("You require the  iptools module to run this script\n pip install iptools")
     sys.exit(2)
+
 import random # For random generated IP addresses
 import socket, struct
 import sys, getopt
@@ -70,19 +71,20 @@ def printlatex(mylist):
     print ("\\title{IP Subnetting worksheet - \\rndseed}\n\\date{}\n\\maketitle")
     print ("\\pagenumbering{gobble}")  #remove page numbers for improved inclusion elsewhere
 
-    print ("\\section*{PROBLEMS}")
+    print ("\\section*{Problem set XX}")
     latexproblem(mylist)
     print ("\\pagebreak{}\n")
-    print ("section*{SOLUTIONS}")
+    print ("\\section*{Solution set XX}")
     latexsoln(mylist)
 
     print ("\\end{document}")
 
 def latexproblem(mylist):    
-    print (f"% {hex(CONF['seed'])} - to be used for later generation of solutions") 
+    print (f"% SEED {hex(CONF['seed'])} - to be used for later generation of solutions") 
 
-    print ("\\begin{tabular}{|c|c|c|c|c|c|} \hline CIDR &")
-    print ("Network & Bcast & IP Count & First IP & DQ Netmask \\tln")
+    #print ("\\begin{tabular}{|c|c|c|c|c|c|} \hline CIDR &")
+    print ("\\begin{tabular}{|r|P{2.8cm}|P{2.8cm}|P{2.0cm}|P{2.8cm}|P{2.5cm}|}")
+    print ("\hline\n \\textbf{CIDR} & \\textbf{Network} & \\textbf{Broadcast} & \\textbf{IP Count} & \\textbf{First IP} & \\textbf{DQ Netmask} \\tln")
     print ("\\hline\n\\hline")
     if (CONF['exline']):
         print ("102.204.166.91/16 & 102.204.0.0 & 102.204.255.255 & 65536 & 102.204.0.1 & 255.255.0.0 \\tln")
@@ -95,8 +97,10 @@ def latexproblem(mylist):
     print ("\\end{tabular}")
 
 def latexsoln(mylist):
-    print ("\\begin{tabular}{|c|c|c|c|c|c|} \hline CIDR &")
-    print ("Network & Bcast & IP Count & First IP & DQ Netmask \\tln")
+    print (f"% SEED {hex(CONF['seed'])} - to be used for later generation of problems")
+    print ("\\begin{center}")
+    print ("\\begin{tabular}{|c|c|c|c|c|c|} \hline ")
+    print ("\\textbf{CIDR} & \\textbf{Network} & \\textbf{Bcast} & \\textbf{IP Count} & \\textbf{First IP} & \\textbf{DQ Netmask} \\tln")
     print ("\\hline\n\\hline")
 
     for x in  mylist:
@@ -108,7 +112,7 @@ def latexsoln(mylist):
         print (f"{x} & {netname} & {bcast} & {ipcount} & {first} & {dqmask} \\tln") 
         print ("\\hline")
 
-    print ("\\end{tabular}\n")
+    print ("\\end{tabular}\n\\end{center}")
 
 def printcsv(mylist):
     print ("#IP/mask,IP Count,Netblock,Broadcast,First IP,DQ Netmask")
